@@ -4,8 +4,6 @@ import operator
 from collections import namedtuple
 from . import data
 
-Commit = namedtuple('Commit', ['tree', 'parent', 'message'])
-
 
 def write_tree(directory="."):
     entries = []
@@ -84,6 +82,13 @@ def commit(message):
     oid = data.hash_object(commit.encode(), 'commit')
     data.set_HEAD(oid)
     return oid
+
+def checkout(oid):
+    commit = get_commit(oid)
+    read_tree(commit.tree)
+    data.set_HEAD(oid)
+
+Commit = namedtuple('Commit', ['tree', 'parent', 'message'])
 
 
 def get_commit(oid):
