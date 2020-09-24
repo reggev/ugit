@@ -1,7 +1,10 @@
 import argparse
+import os
 import sys
+import textwrap
 from . import data
 from . import base
+from . import bcolors
 
 
 def main():
@@ -36,6 +39,9 @@ def parse_args():
     commit_parser.set_defaults(func=commit)
     commit_parser.add_argument('-m', '--message', required=True)
 
+    log_parser = commands.add_parser('log')
+    log_parser.set_defaults(func=log)
+
     return parser.parse_args()
 
 
@@ -63,3 +69,18 @@ def read_tree(args):
 
 def commit(args):
     print(base.commit(args.message))
+
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def log(args):
+    oid = data.get_HEAD()
+    clear_screen()
+    while oid:
+        commit = base.get_commit(oid)
+        print(f'{bcolors.OKBLUE}commit {oid}{bcolors.ENDC}\n')
+        print(textwrap.indent(commit.message, '    '))
+        print('')
+        oid = commit.parent
