@@ -1,4 +1,5 @@
 import argparse
+from . import data
 
 
 def main():
@@ -17,4 +18,4 @@ def parse_args():
 
 
 def init(args):
-    print('initialized project')
+    data.init()
