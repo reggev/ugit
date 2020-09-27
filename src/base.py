@@ -1,6 +1,7 @@
 import os
 import itertools
 import operator
+import string
 from collections import namedtuple
 from . import data
 
@@ -117,6 +118,20 @@ def get_oid(name):
     '''
     get_oid returns gets a name and tries to resolve for a ref
     it a ref object is found, it's oid is returned
-    if not, the name is returned (assuming the name itself is an oid)
+    if not, if the name is a sha1 string it is returned
     '''
-    return data.get_ref(name) or name
+    refs_to_try = [
+        f'{name}',
+        f'refs/{name}',
+        f'refs/tags/{name}',
+        f'refs/heads/{name}',
+    ]
+    for ref in refs_to_try:
+        if data.get_ref(ref):
+            return data.get_ref(ref)
+
+    # if the name is a sha1 hash
+    is_hex = all(c in string.hexdigits for c in name)
+    if len(name) == 40 and is_hex:
+        return name
+    assert False, f'unknown name {name}'
