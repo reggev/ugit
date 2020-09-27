@@ -114,4 +114,9 @@ def create_tag(name, oid):
 
 
 def get_oid(name):
+    '''
+    get_oid returns gets a name and tries to resolve for a ref
+    it a ref object is found, it's oid is returned
+    if not, the name is returned (assuming the name itself is an oid)
+    '''
     return data.get_ref(name) or name

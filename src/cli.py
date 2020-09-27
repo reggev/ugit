@@ -17,6 +17,7 @@ def parse_args():
     commands = parser.add_subparsers(dest='command')
     commands.required = True
 
+    # this will act as a converted method on added arguments
     oid = base.get_oid
 
     init_parser = commands.add_parser('init')
